@@ -1,0 +1,31 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* KMRL Brand Colors */
+:root {
+  --kmrl-blue: #003366;
+  --kmrl-light-blue: #4a90e2;
+  --kmrl-green: #00a651;
+  --kmrl-gray: #f5f5f5;
+  --kmrl-dark-gray: #333333;
+}
+
+header {
+  background-color: var(--kmrl-blue);
+  color: white;
+  padding: 1rem;
+}
+
+nav {
+  background-color: var(--kmrl-light-blue);
+  padding: 0.5rem;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+}

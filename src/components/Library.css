@@ -1,0 +1,146 @@
+.library {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.filter-select {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  min-width: 150px;
+}
+
+.document-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.document-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #4a90e2;
+}
+
+.document-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.document-header h3 {
+  margin: 0;
+  color: #003366;
+  flex: 1;
+}
+
+.urgency-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.urgency-badge.high {
+  background-color: #ff4444;
+}
+
+.urgency-badge.medium {
+  background-color: #ffaa00;
+}
+
+.urgency-badge.low {
+  background-color: #44aa44;
+}
+
+.upload-date,
+.departments {
+  color: #666;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.summary {
+  color: #333;
+  line-height: 1.5;
+  margin: 0.5rem 0;
+}
+
+.document-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.preview-btn,
+.download-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.preview-btn {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.preview-btn:hover {
+  background-color: #3a7bd5;
+}
+
+.download-btn {
+  background-color: #00a651;
+  color: white;
+}
+
+.download-btn:hover {
+  background-color: #008a45;
+}
+
+.status {
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+}
+
+.status.distributed {
+  background-color: #e8f5e8;
+  color: #00a651;
+}
+
+.status.pending-review {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.no-results {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin-top: 2rem;
+}

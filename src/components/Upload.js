@@ -7,6 +7,9 @@ function Upload({ user }) {
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [distributing, setDistributing] = useState(false);
+  const [docId, setDocId] = useState(null);
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
   const onDrop = useCallback(acceptedFiles => {
     const uploadedFile = acceptedFiles[0];
@@ -14,11 +17,31 @@ function Upload({ user }) {
     setAnalyzing(true);
     setAnalysisResult(null);
 
-    // Simulate AI analysis
-    setTimeout(() => {
+    // Upload to backend and get summary
+    const formData = new FormData();
+    formData.append('file', uploadedFile);
+
+    fetch('http://localhost:8000/upload', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
       setAnalyzing(false);
-      setAnalysisResult(mockAnalysis(uploadedFile.name));
-    }, 3000); // 3 seconds for demo
+      setDocId(data.id);
+      setAnalysisResult({
+        summary: data.summary,
+        keyPoints: ['Document processed successfully'],
+        urgency: 'Medium',
+        departments: ['General'],
+        compliance: 'N/A',
+        actionItems: ['Review summary']
+      });
+    })
+    .catch(error => {
+      setAnalyzing(false);
+      console.error('Upload failed:', error);
+    });
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -33,52 +56,34 @@ function Upload({ user }) {
     multiple: false
   });
 
-  const mockAnalysis = (filename) => {
-    // Mock analysis based on filename
-    const analyses = {
-      'safety_bulletin.pdf': {
-        summary: 'Critical safety update regarding metro rail operations requiring immediate attention from all station controllers.',
-        keyPoints: [
-          'Implement emergency evacuation procedures',
-          'Train staff on new safety protocols',
-          'Update safety documentation'
-        ],
-        urgency: 'High',
-        departments: ['Operations', 'Safety', 'Engineering'],
-        compliance: 'Regulatory deadline: 30 days',
-        actionItems: ['Schedule training sessions', 'Update emergency manuals']
-      },
-      'maintenance_schedule.pdf': {
-        summary: 'Updated rolling stock maintenance schedule affecting multiple stations.',
-        keyPoints: [
-          'Maintenance window: 2-4 AM daily',
-          'Affecting trains 101-150',
-          'Alternative routing required'
-        ],
-        urgency: 'Medium',
-        departments: ['Engineering', 'Operations'],
-        compliance: 'Operational requirement',
-        actionItems: ['Notify affected stations', 'Plan alternative services']
-      }
-      // Add more mock data as needed
-    };
 
-    return analyses[filename] || {
-      summary: 'Document uploaded successfully. Analysis complete.',
-      keyPoints: ['Review content thoroughly', 'Share with relevant teams', 'Track implementation'],
-      urgency: 'Low',
-      departments: ['General'],
-      compliance: 'No immediate requirements',
-      actionItems: ['File for reference', 'Monitor for updates']
-    };
-  };
 
   const handleDistribute = () => {
+    if (!email || !docId) {
+      alert('Please enter email and ensure document is uploaded.');
+      return;
+    }
     setDistributing(true);
-    setTimeout(() => {
+
+    fetch('http://localhost:8000/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        document_id: docId,
+        recipient: email,
+        message: message || 'Please review the attached document and summary.'
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
       setDistributing(false);
-      alert('Document distributed successfully to selected stakeholders!');
-    }, 2000);
+      alert(`Email sent: ${data.status}`);
+    })
+    .catch(error => {
+      setDistributing(false);
+      console.error('Send failed:', error);
+      alert('Failed to send email.');
+    });
   };
 
   return (
@@ -145,13 +150,28 @@ function Upload({ user }) {
               ))}
             </ul>
           </div>
-          
-          <button 
-            className="distribute-btn" 
+
+          <div className="email-section">
+            <h4>Send to Department</h4>
+            <input
+              type="email"
+              placeholder="Department email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <textarea
+              placeholder="Custom message (optional)"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+          </div>
+
+          <button
+            className="distribute-btn"
             onClick={handleDistribute}
             disabled={distributing}
           >
-            {distributing ? 'Distributing...' : 'Distribute to Stakeholders'}
+            {distributing ? 'Sending...' : 'Send Email'}
           </button>
         </div>
       )}
